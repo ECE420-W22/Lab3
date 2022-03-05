@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     double end;
 
     // Load in the matrix
-    int numThreads = strtol(argv[2], NULL, 10);
+    int numThreads = strtol(argv[1], NULL, 10);
     Lab3LoadInput(&A, &size);
 
     /*Calculate the solution by serial code*/
