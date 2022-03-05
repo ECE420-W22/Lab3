@@ -6,7 +6,7 @@
 
 int main(int argc, char *argv[])
 {
-    int **A;
+    double **A;
     int size;
 
     double *X;
