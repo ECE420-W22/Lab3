@@ -87,6 +87,6 @@ int main(int argc, char *argv[])
     GET_TIME(end);
     Lab3SaveOutput(X, size, end - start);
     DestroyVec(X);
-	DestroyMat(A, size);
-	free(index);
+    DestroyMat(A, size);
+    free(index);
 }
