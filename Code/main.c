@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[])
 {
+    
     double **A;
     int size;
 
@@ -16,9 +17,11 @@ int main(int argc, char *argv[])
 
     double start;
     double end;
+    
 
     // Load in the matrix
     int numThreads = strtol(argv[1], NULL, 10);
+    
     Lab3LoadInput(&A, &size);
 
     /*Calculate the solution by serial code*/
@@ -38,7 +41,9 @@ int main(int argc, char *argv[])
         {
             /*Pivoting*/
             temp = 0;
+            #pragma omp parallel for
             for (i = k, j = 0; i < size; ++i)
+                #pragma omp critical
                 if (temp < A[index[i]][k] * A[index[i]][k])
                 {
                     temp = A[index[i]][k] * A[index[i]][k];
@@ -50,7 +55,9 @@ int main(int argc, char *argv[])
                 index[j] = index[k];
                 index[k] = i;
             }
+            #pragma omp parallel num_threads(numThreads) \ private(temp,i) shared(A,k) default(none)
             /*calculating*/
+            #pragma omp for
             for (i = k + 1; i < size; ++i)
             {
                 temp = A[index[i]][k] / A[index[k]][k];
@@ -61,6 +68,8 @@ int main(int argc, char *argv[])
         /*Jordan elimination*/
         for (k = size - 1; k > 0; --k)
         {
+            #pragma omp parallel num_threads(numThreads) \ private(temp,i) shared(A,k) default(none)
+            #pragma omp for
             for (i = k - 1; i >= 0; --i)
             {
                 temp = A[index[i]][k] / A[index[k]][k];
@@ -69,8 +78,11 @@ int main(int argc, char *argv[])
             }
         }
         /*solution*/
-        for (k = 0; k < size; ++k)
+        #pragma omp parallel for
+        for (k = 0; k < size; ++k) {
+            #pragma omp critical
             X[k] = A[index[k]][size] / A[index[k]][k];
+        }
     }
     GET_TIME(end);
     Lab3SaveOutput(X, size, end - start);
