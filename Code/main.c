@@ -68,7 +68,7 @@ int main(int argc, char *argv[])
         /*Jordan elimination*/
         for (k = size - 1; k > 0; --k)
         {
-            #pragma omp parallel num_threads(numThreads) \ private(temp,i) shared(A,k) default(none)
+            #pragma omp parallel num_threads(numThreads) \ private(temp,i) shared(A,k,size) default(none)
             #pragma omp for
             for (i = k - 1; i >= 0; --i)
             {
