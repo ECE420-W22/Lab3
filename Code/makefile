@@ -4,7 +4,7 @@ OBJECTS = main.o Lab3IO.o
 CLIENT_NAME = client
 
 $(PROGRAM_NAME): main.o Lab3IO.o
-	$(CC) -pthread -o $(PROGRAM_NAME) $(OBJECTS) -lm
+	$(CC) -fopenmp -o $(PROGRAM_NAME) $(OBJECTS) -lm
 
 main.o: main.c Lab3IO.h timer.h
 	$(CC) -c main.c -o main.o
