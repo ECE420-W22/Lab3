@@ -10,6 +10,7 @@ Compiling:
 #include <stdlib.h>
 #include <math.h>
 #include "Lab3IO.h"
+#include "timer.h"
 
 #define TOL 0.0005
 
@@ -18,6 +19,8 @@ int main(int argc, char* argv[]){
 	double** Au;
 	double* X;
 	double temp, error, Xnorm;
+	double start;
+    double end;
 	int* index;
 	FILE* fp;
 
@@ -37,7 +40,7 @@ int main(int argc, char* argv[]){
 	index = malloc(size * sizeof(int));
 	for (i = 0; i < size; ++i)
 		index[i] = i;
-
+	GET_TIME(start);
 	if (size == 1)
 		X[0] = Au[0][1] / Au[0][0];
 	else{
@@ -74,6 +77,7 @@ int main(int argc, char* argv[]){
 		for (k=0; k< size; ++k)
 			X[k] = Au[index[k]][size] / Au[index[k]][k];
 	}
+	GET_TIME(end);
 
 	/*compare the solution*/
 	error = 0;
@@ -90,7 +94,7 @@ int main(int argc, char* argv[]){
 		printf("Congratulation!!! Your result is accepted!\n");
 	else
 		printf("Sorry, your result is wrong.\n");
-	
+	printf("%f\n", end-start);
 	fclose(fp);
 	DestroyVec(X);
 	DestroyMat(Au, size);
