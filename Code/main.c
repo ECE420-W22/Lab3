@@ -36,6 +36,7 @@ int main(int argc, char *argv[])
         X[0] = A[0][1] / A[0][0];
     else
     {
+        // omp_set_dynamic(1);
         /*Gaussian elimination*/
         #pragma omp parallel num_threads(numThreads)
         {
@@ -49,11 +50,14 @@ int main(int argc, char *argv[])
                     for (i = k; i < size; ++i)
                         #pragma omp task firstprivate(i) shared(temp,A,k,size,index,j)
                         {
-                            #pragma omp critical
                             if (temp < A[index[i]][k] * A[index[i]][k])
                             {
-                                temp = A[index[i]][k] * A[index[i]][k];
-                                j = i;
+                                #pragma omp critical
+                                if (temp < A[index[i]][k] * A[index[i]][k])
+                                {
+                                    temp = A[index[i]][k] * A[index[i]][k];
+                                    j = i;
+                                }
                             }
                         }
                     #pragma omp taskwait
