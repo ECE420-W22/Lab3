@@ -84,14 +84,12 @@ int main(int argc, char *argv[])
                 /*Jordan elimination*/
                 for (k = size - 1; k > 0; --k)
                 {
+                    #pragma omp task firstprivate(k) private(temp,i) shared(A,size,index)
                     for (i = k - 1; i >= 0; --i)
                     {
-                        #pragma omp task firstprivate(temp,i) shared(A,k,size,index)
-                        {
-                            temp = A[index[i]][k] / A[index[k]][k];
-                            A[index[i]][k] -= temp * A[index[k]][k];
-                            A[index[i]][size] -= temp * A[index[k]][size];
-                        }
+                        temp = A[index[i]][k] / A[index[k]][k];
+                        A[index[i]][k] -= temp * A[index[k]][k];
+                        A[index[i]][size] -= temp * A[index[k]][size];
                     }
                     #pragma omp taskwait
                 }
